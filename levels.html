@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>المستويات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        @font-face {
+            font-family: 'NotoSansArabic_Condensed-Bold';
+            src: url('fonts/NotoSansArabic_Condensed-Bold.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/backactivities_img.png') no-repeat center center;
+            background-size: cover;
+            font-family: 'NotoSansArabic_Condensed-Bold', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .levels-container {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .level-card {
+            width: 180px;
+            height: 180px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .level-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .level-card:hover {
+            transform: scale(1.1);
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .popup.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .letters-container {
+            direction: rtl;
+            justify-content: flex-end;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .letter-box {
+            width: 50px;
+            height: 50px;
+            background-color: #8e44ad;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            font-family: 'NotoSansArabic_Condensed-Bold', Arial, sans-serif;
+        }
+
+        .popup-box img {
+            width: 150px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .popup-box img:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            .levels-container {
+                gap: 20px;
+            }
+
+            .level-card {
+                width: 140px;
+                height: 140px;
+            }
+
+            .letter-box {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .popup-box img {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>   </h1>
+
+    <div class="levels-container">
+        <div class="level-card" id="levelA">
+            <img src="images/Level_A.png" alt="المستوى الأول">
+        </div>
+        <div class="level-card" id="levelB">
+            <img src="images/Level_B.png" alt="المستوى الثاني">
+        </div>
+        <div class="level-card" id="levelC">
+            <img src="images/Level_C.png" alt="المستوى الثالث">
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-box">
+            <div class="letters-container" id="lettersContainer"></div>
+            <img src="images/start_activities.png" id="startBtn" alt="ابدأ الأنشطة">
+        </div>
+    </div>
+
+    <script>
+        const popup = document.getElementById('popup');
+        const lettersContainer = document.getElementById('lettersContainer');
+        const startBtn = document.getElementById('startBtn');
+
+        const levelsLetters = {
+            A: ['أ', 'ب', 'د', 'س', 'ع', 'ل', 'م', 'و'],
+            B: ['ت', 'ج', 'ر', 'ز', 'ص', 'ط', 'ف', 'ك', 'ن', 'هـ', 'ي'],
+            C: ['ث', 'ح', 'خ', 'ذ', 'ش', 'ض', 'ظ', 'غ', 'ق']
+        };
+
+        let selectedLevel = '';
+
+        function showLetters(level) {
+            selectedLevel = level; // ✅ حفظ المستوى المختار
+            lettersContainer.innerHTML = '';
+            levelsLetters[level].forEach(letter => {
+                const box = document.createElement('div');
+                box.classList.add('letter-box');
+                box.textContent = letter;
+                lettersContainer.appendChild(box);
+            });
+            popup.classList.add('show');
+        }
+
+        document.getElementById('levelA').addEventListener('click', () => showLetters('A'));
+        document.getElementById('levelB').addEventListener('click', () => showLetters('B'));
+        document.getElementById('levelC').addEventListener('click', () => showLetters('C'));
+
+        startBtn.addEventListener('click', () => {
+            // ✅ حفظ المستوى المختار في sessionStorage قبل الانتقال
+            sessionStorage.setItem('selectedLevel', selectedLevel);
+            popup.classList.remove('show');
+            window.location.href = 'activities.html';
+        });
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+
+</html>

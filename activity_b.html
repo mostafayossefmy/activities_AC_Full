@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="utf-8">
+    <title>مطابقة الحروف بالصورة - النشاط الثاني</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --display-box-width: 220px;
+            --display-box-height: 220px;
+            --letter-size: 55px;
+            --main-font-family: 'NotoSansArabic_Condensed-Bold', Arial, sans-serif;
+        }
+
+        @font-face {
+            font-family: 'NotoSansArabic_Condensed-Bold';
+            src: url('fonts/NotoSansArabic_Condensed-Bold.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/back_a_img.png') no-repeat center center;
+            background-size: cover;
+            font-family: var(--main-font-family);
+            direction: rtl;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        .activity-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 80vh;
+            max-height: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row;
+            overflow: visible;
+        }
+
+        .sidebar {
+            width: 16%;
+            background: #f3e8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px 10px;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-sizing: border-box;
+        }
+
+        .stars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .stars img { width: 30px; height: 30px; }
+
+        .child-photo img { width: 110px; height: 110px; object-fit: cover; }
+
+        .student-name p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            background: #fff1cc;
+            border-radius: 12px;
+            padding: 6px 12px;
+        }
+
+        .timer img { width: 80px; height: 100px; object-fit: contain; }
+
+        .timer-controls { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 2px; }
+
+        .timer-controls img { width: 35px; height: 35px; cursor: pointer; }
+
+        .timer-display {
+            font-size: 20px;
+            font-weight: bold;
+            background: #f779e2;
+            border-radius: 8px;
+            padding: 5px 10px;
+            min-width: 50px;
+            height: 35px;
+            text-align: center;
+        }
+
+        .controls { display: flex; justify-content: center; gap: 25px; width: 100%; margin-top: 20px; }
+
+        .controls img { width: 55px; height: 55px; cursor: pointer; }
+
+        .activity-content {
+            width: 84%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+            box-sizing: border-box;
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .activity-label { position: absolute; top: -25px; left: -25px; width: 150px; z-index: 5; }
+
+        .instructions-icon { position: absolute; top: 35px; left: 25px; width: 70px; height: 70px; cursor: pointer; }
+
+        .match-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .result-icon { width: 100px; height: 100px; display: none; }
+
+        .image-box {
+            width: var(--display-box-width);
+            height: var(--display-box-height);
+            background: url('images/back_img.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-box img { max-width: calc(var(--display-box-width) - 40px); max-height: calc(var(--display-box-height) - 40px); border-radius: 12px; }
+
+        .drop-zone {
+            width: 150px;
+            height: 150px;
+            background: url('images/backaa_img.png') no-repeat center center;
+            background-size: contain;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drop-zone img { max-width: 80px; max-height: 80px; }
+
+        .letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 635px; margin-top: 10px; direction: rtl; }
+
+        .letter {
+            width: 50px; height: 50px;
+            background: url('images/back_letter.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; font-weight: bold; color: white;
+            cursor: pointer;
+        }
+
+        .dropped-letter {
+            width: 90px !important;
+            height: 90px !important;
+            background: linear-gradient(45deg, #cc66ff, #d88dfd) !important;
+            font-size: 36px !important; font-weight: bold !important;
+            border: 3px solid white !important;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3) !important;
+            border-radius: 20px !important;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* responsive tweaks */
+        @media (max-width: 768px) {
+            .activity-container { flex-direction: column; height: auto; max-width: 95%; }
+            .sidebar { width: 100%; flex-direction: row; padding: 10px; gap: 10px; }
+            .activity-content { width: 100%; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="activity-container">
+    <div class="sidebar">
+        <div class="stars">
+            <img id="star1" src="images/star1.png" alt="نجمة1">
+            <img id="star2" src="images/star2.png" alt="نجمة2">
+            <img id="star3" src="images/star3.png" alt="نجمة3">
+        </div>
+        <div class="child-photo"><img id="childPhoto" src="images/child_photo.png" alt="صورة الطفل"></div>
+        <div class="student-name"><p id="studentName">أحمد محمد</p></div>
+        <div class="timer">
+            <img id="timerImage" src="images/timer.png" alt="مؤقت">
+        </div>
+        <div class="timer-controls">
+            <img src="images/play.png" id="startBtn" alt="تشغيل">
+            <div class="timer-display" id="timerDisplay">0</div>
+            <img src="images/stop.png" id="stopBtn" alt="إيقاف">
+        </div>
+        <div class="controls">
+            <img class="icon-home" src="images/home.png" alt="الرئيسية">
+            <img class="icon-retry" src="images/retry.png" alt="إعادة">
+        </div>
+    </div>
+
+    <div class="activity-content">
+        <img src="images/sd_img.png" class="instructions-icon" alt="تعليمات">
+        <img class="activity-label" src="images/actv_2.png" alt="نشاط">
+
+        <div class="match-area">
+            <img id="resultIcon" class="result-icon" alt="نتيجة">
+            <div class="drop-zone" id="dropZone">
+                <img src="images/question_img.png" alt="?">
+            </div>
+            <div class="image-box">
+                <img id="matchImage" alt="صورة للمطابقة">
+            </div>
+        </div>
+
+        <div class="letters" id="lettersGrid"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // استرجاع اسم وصورة الطفل (إن وُجد)
+    const storedName = sessionStorage.getItem('userName');
+    const storedImage = sessionStorage.getItem('userImage');
+    if (storedName) document.getElementById('studentName').textContent = storedName;
+    if (storedImage) document.getElementById('childPhoto').src = storedImage;
+
+    // مصفوفة الحروف لكل مستوى (تأكد أن ملفات الصور داخل images وملفات الصوت داخل sounds)
+    const levels = {
+        'A': [
+            
+            { letter:'أ', img:'photo1.png', sound:'ph1.mp3' },
+            { letter:'ب', img:'photo2.png', sound:'ph2.mp3' },
+            { letter:'د', img:'photo8.png', sound:'ph8.mp3' },
+            { letter:'س', img:'photo12.png', sound:'ph12.mp3' },
+            { letter:'ل', img:'photo23.png', sound:'ph23.mp3' },
+            { letter:'م', img:'photo24.png', sound:'ph24.mp3' },
+            { letter:'و', img:'photo27.png', sound:'ph27.mp3' }
+        ],
+        'B': [
+            { letter:'ت', img:'photo3.png', sound:'ph3.mp3' },
+            { letter:'ج', img:'photo5.png', sound:'ph5.mp3' },
+            { letter:'ر', img:'photo10.png', sound:'ph10.mp3' },
+            { letter:'ز', img:'photo11.png', sound:'ph11.mp3' },
+            { letter:'ص', img:'photo14.png', sound:'ph14.mp3' },
+            { letter:'ط', img:'photo16.png', sound:'ph16.mp3' },
+            { letter:'ف', img:'photo20.png', sound:'ph20.mp3' },
+            { letter:'ك', img:'photo22.png', sound:'ph22.mp3' },
+            { letter:'ن', img:'photo25.png', sound:'ph25.mp3' },
+            { letter:'ه', img:'photo26.png', sound:'ph26.mp3' },
+            { letter:'ي', img:'photo28.png', sound:'ph28.mp3' }
+        ],
+        'C': [
+            { letter:'ث', img:'photo4.png', sound:'ph4.mp3' },
+            { letter:'ح', img:'photo6.png', sound:'ph6.mp3' },
+            { letter:'خ', img:'photo7.png', sound:'ph7.mp3' },
+            { letter:'ذ', img:'photo9.png', sound:'ph9.mp3' },
+            { letter:'ش', img:'photo13.png', sound:'ph13.mp3' },
+            { letter:'ض', img:'photo15.png', sound:'ph15.mp3' },
+            { letter:'ظ', img:'photo17.png', sound:'ph17.mp3' },
+            { letter:'غ', img:'photo19.png', sound:'ph19.mp3' },
+            { letter:'ق', img:'photo21.png', sound:'ph21.mp3' }
+        ]
+    };
+
+    // قراءة المستوى المختار من شاشة "المستويات" (sessionStorage)
+    let currentLevel = sessionStorage.getItem('selectedLevel') || 'A';
+    // تأكد من وجود المستوى داخل المصفوفة وإلا افتراضي 'A'
+    if (!levels[currentLevel]) currentLevel = 'A';
+
+    let matchData = [...levels[currentLevel]];
+    let currentIndex = 0;
+    let correctAnswers = 0;
+
+    const lettersGrid = document.getElementById('lettersGrid');
+    const matchImage = document.getElementById('matchImage');
+    const dropZone = document.getElementById('dropZone');
+    const resultIcon = document.getElementById('resultIcon');
+    const starElems = [
+        document.getElementById('star1'),
+        document.getElementById('star2'),
+        document.getElementById('star3')
+    ];
+
+ const homeBtn = document.querySelector('.icon-home');
+const retryBtn = document.querySelector('.icon-retry');
+
+homeBtn.addEventListener('click', () => window.location.href = 'activities.html');
+
+retryBtn.addEventListener('click', () => {
+    // إيقاف أي مؤقت جاري
+    clearInterval(timerInterval);
+    timerInterval = null;
+
+    // إعادة العداد للرقم صفر
+    counter = 0;
+    timerDisplay.textContent = counter;
+
+    // إعادة ضبط النجوم
+    correctAnswers = 0;
+    starElems.forEach((star, i) => {
+        star.src = `images/star${i + 1}.png`;
+        star.dataset.activated = '';
+    });
+    
+    // إعادة السؤال الحالي إلى البداية بدون تغيير المستوى أو البيانات
+    currentIndex = 0;
+    showNewQuestion();
+});
+
+
+    function showNewQuestion() {
+        if (!matchData || matchData.length === 0) return;
+        const current = matchData[currentIndex];
+        dropZone.innerHTML = '<img src="images/question_img.png" alt="?">';
+        resultIcon.style.display = 'none';
+        matchImage.src = `images/${current.img}`;
+
+        // بناء شبكة الحروف (مُخلط)
+        lettersGrid.innerHTML = '';
+        const shuffledLetters = [...matchData];
+        shuffleArray(shuffledLetters);
+
+        shuffledLetters.forEach(data => {
+            const div = document.createElement('div');
+            div.className = 'letter';
+            div.textContent = data.letter;
+            div.draggable = true;
+            div.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', data.letter));
+            lettersGrid.appendChild(div);
+        });
+
+        setupDropZone(current);
+    }
+
+    function setupDropZone(current) {
+        dropZone.ondragover = e => e.preventDefault();
+        dropZone.ondrop = e => {
+            e.preventDefault();
+            const droppedLetter = e.dataTransfer.getData('text/plain');
+            if (droppedLetter === current.letter) {
+                const droppedElement = document.createElement('div');
+                droppedElement.className = 'dropped-letter';
+                droppedElement.textContent = droppedLetter;
+                dropZone.innerHTML = '';
+                dropZone.appendChild(droppedElement);
+
+                resultIcon.src = 'images/right.png';
+                resultIcon.style.display = 'block';
+                // تشغيل صوت الصورة الحالية (من مجلد sounds)
+                new Audio(`sounds/${current.sound}`).play().catch(()=>{});
+
+                correctAnswers++;
+                updateStars();
+
+                currentIndex++;
+                if (currentIndex >= matchData.length) currentIndex = 0;
+
+                setTimeout(showNewQuestion, 1500);
+            } else {
+                resultIcon.src = 'images/wrong.png';
+                resultIcon.style.display = 'block';
+                new Audio('sounds/wrong.mp3').play().catch(()=>{});
+                setTimeout(() => resultIcon.style.display = 'none', 1400);
+            }
+        };
+    }
+
+    function updateStars() {
+        if (correctAnswers % 3 === 0) {
+            const index = (correctAnswers / 3) - 1;
+            if (index >= 0 && index < starElems.length) {
+                starElems[index].src = 'images/star_red.png';
+                // تحريك بسيط للنجمة للملاحظة البصرية
+                starElems[index].style.transform = 'translateX(12px) scale(1.15)';
+                setTimeout(()=>{ starElems[index].style.transform = ''; }, 300);
+            }
+        }
+    }
+
+    // تشغيل صوت الصورة عند الضغط على الصورة
+    matchImage.addEventListener('click', () => {
+        const current = matchData[currentIndex];
+        if (current && current.sound) {
+            new Audio(`sounds/${current.sound}`).play().catch(()=>{});
+        }
+    });
+
+    // أيقونة التعليمات
+    const instructionsIcon = document.querySelector('.instructions-icon');
+    instructionsIcon.addEventListener('click', () => new Audio('sounds/sd2_sound.mp3').play().catch(()=>{}));
+
+    // المؤقت
+    let timerInterval; let counter = 0;
+    const timerDisplay = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+
+    startBtn.addEventListener('click', () => {
+        if (!timerInterval) {
+            timerInterval = setInterval(() => { counter++; timerDisplay.textContent = counter; }, 1000);
+        }
+    });
+    stopBtn.addEventListener('click', () => { clearInterval(timerInterval); timerInterval = null; });
+
+    function shuffleArray(array) {
+        for (let i = array.length -1; i>0;i--){
+            const j = Math.floor(Math.random()*(i+1));
+            [array[i],array[j]]=[array[j],array[i]];
+        }
+    }
+
+    // بدء النشاط
+    showNewQuestion();
+});
+</script>
+
+</body>
+</html>

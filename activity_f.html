@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>النشاط السادس - المطور</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        @font-face {
+            font-family: 'NotoSansArabic_Condensed-Bold';
+            src: url('fonts/NotoSansArabic_Condensed-Bold.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background: url('images/back_a_img.png') no-repeat center center;
+            background-size: cover; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+            overflow: hidden;
+        }
+
+        .activity-container {
+            width: 100%; max-width: 1000px; height: 80vh; max-height: 800px;
+            background: #ffffff; border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex; flex-direction: row-reverse;
+            align-items: center; justify-content: space-between;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 15%; background: #f3e8ff;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: space-around;
+            padding: 15px 5px; border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px; box-sizing: border-box; height: 100%;
+        }
+
+        .stars { direction: rtl; display: flex; align-items: flex-end; justify-content: center; gap: 6px; }
+        .stars img { width: 30px; height: 30px; transition: transform .25s ease; }
+        .stars img:nth-child(2) { transform: translateY(-6px); }
+
+        .child-photo img { width: 110px; height: 110px; display: block; margin: 0 auto; object-fit: cover; }
+        .student-name p {
+            margin: 0; font-size: 16px; font-weight: bold; background: #fff1cc;
+            border-radius: 12px; padding: 6px 12px; white-space: nowrap;
+        }
+
+        /* تنسيق العداد المطور */
+        .timer-controls {
+            display: flex; align-items: center; justify-content: center; gap: 8px; direction: ltr; /* لضمان ترتيب stop - counter - play */
+        }
+
+        .timer-display {
+            font-size: 20px; font-weight: bold; background: #f779e2;
+            border-radius: 8px; padding: 5px 10px; min-width: 50px;
+            height: 35px; text-align: center; display: flex; align-items: center; justify-content: center;
+        }
+
+        .controls { display: flex; gap: 10px; justify-content: center; direction: ltr; /* ليكون home على اليمين و retry بجانبه */ }
+        .controls img { width: 50px; height: 50px; cursor: pointer; transition: transform 0.15s ease; }
+        .controls img:hover { transform: scale(1.08); }
+
+        .content-area {
+            width: 85%; display: flex; flex-direction: column;
+            align-items: center; justify-content: space-around;
+            height: 100%; position: relative;
+        }
+
+        .activity-label { position: absolute; top: -25px; left: -25px; width: 150px; z-index: 5; }
+        .instructions-icon { position: absolute; top: 35px; left: 25px; width: 70px; height: 70px; cursor: pointer; z-index: 15; }
+
+        .image-box {
+            width: 85%; max-width: 220px; height: 220px;
+            background: url('images/back_img.png') no-repeat center center;
+            background-size: cover; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .image-box img { max-width: 180px; max-height: 180px; cursor: pointer; }
+
+        .word-drop-zone {
+            display: flex; justify-content: center; align-items: center;
+            min-height: 70px; width: 90%; max-width: 400px;
+            background: #ffffcc; border: 8px solid #ff9966; border-radius: 10px;
+            font-size: 45px; font-weight: bold; direction: rtl; color: #1505ee;
+        }
+
+        .missing-letter { color: red; font-weight: bold; min-width: 30px; text-align: center; }
+
+        .letters-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 635px; direction: rtl; }
+
+        .letter {
+            width: 50px; height: 50px;
+            background: url('images/back_letter.png') no-repeat center center;
+            background-size: cover; display: flex; align-items: center;
+            justify-content: center; font-size: 30px; color: white; cursor: grab;
+        }
+
+        .glowing-box { animation: correctGlow 1.5s ease-in-out 3; }
+        @keyframes correctGlow {
+            0%, 100% { box-shadow: 0 0 0 #4CAF50; }
+            50% { box-shadow: 0 0 30px 10px #4CAF50; }
+        }
+
+        .difficulty-options {
+            position: absolute; top: 10px; right: 10px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .difficulty-options img { width: 35px; height: 35px; cursor: pointer; transition: 0.2s; }
+        
+        /* تعديل الحالة النشطة: حذف الإطار وإضافة تأثير تكبير وتوهج بسيط */
+        .difficulty-options img.active { 
+            transform: scale(1.1); 
+            filter: brightness(1.1) /* drop-shadow(0 0 5px #f779e204);  */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="activity-container">
+        <div class="sidebar">
+            <div class="row stars">
+                <img id="star1" src="images/star1.png">
+                <img id="star2" src="images/star2.png">
+                <img id="star3" src="images/star3.png">
+            </div>
+            <div class="child-photo"><img id="childPhoto" src="images/child_photo.png"></div>
+            <div class="student-name"><p id="studentName">أحمد محمد</p></div>
+            <div class="timer"><img src="images/timer.png" style="width:70px;"></div>
+            
+            <div class="timer-controls">
+                <img src="images/stop.png" id="stopBtn" style="width:33px; cursor:pointer;">
+                <div class="timer-display" id="timerDisplay">0</div>
+                <img src="images/play.png" id="startBtn" style="width:33px; cursor:pointer;">
+            </div>
+
+            <div class="row controls">
+                <img id="retryBtn" src="images/retry.png">
+                <img id="homeBtn" src="images/home.png">
+            </div>
+        </div>
+
+        <div class="content-area">
+            <img src="images/sd_img.png" class="instructions-icon" id="insBtn">
+            <img src="images/actv_6.png" class="activity-label">
+
+            <div class="image-box" id="imageBox"></div>
+            <div class="word-drop-zone" id="wordDropZone" data-correct-letter="" data-word=""></div>
+            <div class="letters-grid" id="lettersGrid"></div>
+
+            <div class="difficulty-options">
+                <img src="images/letter_a.png" onclick="setLevel(1)">
+                <img src="images/letter_b.png" onclick="setLevel(2)">
+                <img src="images/letter_c.png" onclick="setLevel(3)">
+            </div>
+
+            <audio id="correctSound" src="sounds/correct.mp3"></audio>
+            <audio id="wrongSound" src="sounds/wrong.mp3"></audio>
+            <audio id="applauseSound" src="sounds/clap.mp3"></audio>
+        </div>
+    </div>
+
+    <script>
+        const globalLevel = sessionStorage.getItem('selectedLevel') || 'A';
+
+        // 2. المصفوفة الكبرى (90 كلمة)
+        // ملاحظة: قمت بوضع الـ 30 كلمة التي أرسلتها كمثال، عليك إكمال الباقي بنفس النمط
+        const allWordsMatrix = {
+            'A': {
+                1: [ // كلمات المستوى A - أول الكلمة
+                    { id: 1, word: "أسد", missing: "أ", shaped: ["أ", "سـ", "د"] },
+                    { id: 2, word: "بطة", missing: "ب", shaped: ["بـ", "ط", "ـة"] },
+                    { id: 3, word: "ديك", missing: "د", shaped: ["د", "يـ", "ك"] },
+                    { id: 4, word: "سمك", missing: "س", shaped: ["سـ", "مـ", "ك"] },
+                    { id: 5, word: "عسل", missing: "ع", shaped: ["عـ", "سـ", "ل"] },
+                    { id: 6, word: "لحم", missing: "ل", shaped: ["لـ", "حـ", "م"] },
+                    { id: 7, word: "مركب", missing: "م", shaped: ["مـ", "ر", "كـ","ب"] },
+                    { id: 8, word: "ولد", missing: "و", shaped: ["و", "لـ", "د"] },
+                    { id: 9, word: "دب", missing: "د", shaped: ["د", "ب"] },
+                    { id: 10, word: "أرنب", missing: "أ", shaped: ["أ", "ر", "نـ","ب"] }
+                ],
+                2: [ // كلمات المستوى A - وسط الكلمة
+                    { id: 11, word: "شاي", missing: "ا", shaped: ["شـ", "ا", "ي"] },
+                    { id: 12, word: "دب", missing: "ب", shaped: ["د", "ب"] },
+                    { id: 13, word: "صندوق", missing: "د", shaped: ["صـ", "نـ", "د","و","ق"] },
+                    { id: 14, word: "غسالة", missing: "س", shaped: ["غـ", "سـ", "ا", "لـ", "ـة"] },
+                    { id: 15, word: "ثعبان", missing: "ع", shaped: ["ثـ", "عـ", "بـ", "ا", "ن"] },
+                    { id: 16, word: "ثعلب", missing: "ل", shaped: ["ثـ", "عـ", "لـ","ب"] },
+                    { id: 17, word: "شمعة", missing: "م", shaped: ["شـ", "مـ", "عـ","ـة"] },
+                    { id: 18, word: "توت", missing: "و", shaped: ["تـ", "و", "ت"] },
+                    { id: 19, word: "كلب", missing: "ل", shaped: ["كـ", "لـ", "ب"] },
+                    { id: 20, word: "خروف", missing: "و", shaped: ["خـ", "ر", "و","ف"] }
+                ],
+                3: [ // كلمات المستوى A - آخر الكلمة
+                    { id: 21, word: "مركب", missing: "ب", shaped: ["مـ", "ر", "كـ","ب"] },
+                    { id: 22, word: "ضفدع", missing: "ع", shaped: ["ضـ", "فـ", "د","ع"] },
+                    { id: 23, word: "خس", missing: "س", shaped: ["خـ", "س"] },
+                    { id: 24, word: "يد", missing: "د", shaped: ["يـ", "د"] },
+                    { id: 25, word: "لحم", missing: "م", shaped: ["لـ", "حـ", "م"] },
+                    { id: 26, word: "فول", missing: "ل", shaped: ["فـ", "و", "ل"] },
+                    { id: 27, word: "كلب", missing: "ب", shaped: ["كـ", "لـ", "ب"] },
+                    { id: 28, word: "فيل", missing: "ل", shaped: ["فـ", "يـ", "ل"] },
+                    { id: 29, word: "قرد", missing: "د", shaped: ["قـ", "ر", "د"] },
+                    { id: 30, word: "بنت", missing: "ت", shaped: ["بـ", "نـ", "ت"] }
+                ]
+            },
+            'B': {
+                1: [ /* أضف هنا 10 كلمات للمستوى B بداية */ 
+                    { id: 31, word: "تفاح", missing: "ت", shaped: ["تـ", "فـ", "ا","ح"] },
+                    { id: 32, word: "جمل", missing: "ج", shaped: ["جـ", "مـ", "ل"] },
+                    { id: 33, word: "رجل", missing: "ر", shaped: ["ر", "جـ", "ل"] },
+                    { id: 34, word: "زرافة", missing: "ز", shaped: ["ز", "ر", "ا","فـ","ـة"] },
+                    { id: 35, word: "صابون", missing: "ص", shaped: ["صـ", "ا", "بـ","و","ن"] },
+                    { id: 36, word: "طفل", missing: "ط", shaped: ["ط", "فـ", "ل"] },
+                    { id: 37, word: "فيل", missing: "ف", shaped: ["فـ", "يـ", "ل"] },
+                    { id: 38, word: "كلب", missing: "ك", shaped: ["كـ", "لـ", "ب"] },
+                    { id: 39, word: "هلال", missing: "ه", shaped: ["هـ", "لـ", "ا","ل"] },
+                    { id: 40, word: "يد", missing: "ي", shaped: ["يـ", "د"] }
+
+                ],
+                2: [ /* أضف هنا 10 كلمات للمستوى B وسط */
+                    { id: 41, word: "فستان", missing: "ت", shaped: ["فـ", "سـ", "تـ","ا","ن"] },
+                    { id: 42, word: "شجرة", missing: "ج", shaped: ["شـ", "جـ", "ر","ة"] },
+                    { id: 43, word: "فرن", missing: "ر", shaped: ["فـ", "ر", "ن"] },
+                    { id: 44, word: "جزر", missing: "ز", shaped: ["جـ", "ز", "ر"] },
+                    { id: 45, word: "تين", missing: "ي", shaped: ["تـ", "يـ", "ن"] },
+                    { id: 46, word: "تفاح", missing: "ف", shaped: ["تـ", "فـ", "ا","ح"] },
+                    { id: 47, word: "حصان", missing: "ص", shaped: ["حـ", "صـ", "ا","ن"] },
+                    { id: 48, word: "سكر", missing: "ك", shaped: ["سـ", "كـ", "ر"] },
+                    { id: 49, word: "كرة", missing: "ر", shaped: ["كـ", "ر", "ة"] },
+                    { id: 50, word: "ظرف", missing: "ر", shaped: ["ظـ", "ر", "ف"] }
+
+                 ],
+                3: [ /* أضف هنا 10 كلمات للمستوى B نهاية */ 
+                    { id: 51, word: "عصفور", missing: "ر", shaped: ["عـ", "صـ", "فـ","و","ر"] },
+                    { id: 52, word: "شمس", missing: "س", shaped: ["شـ", "مـ", "س"] },
+                    { id: 53, word: "بنت", missing: "ت", shaped: ["بـ", "نـ", "ت"] },
+                    { id: 54, word: "غزال", missing: "ل", shaped: ["غـ", "ز", "ا","ل"] },
+                    { id: 55, word: "دولاب", missing: "ب", shaped: ["د", "و", "لـ","ا","ب"] },
+                    { id: 56, word: "حصان", missing: "ن", shaped: ["حـ", "صـ", "ا","ن"] },
+                    { id: 57, word: "فول", missing: "ل", shaped: ["فـ", "و", "ل"] },
+                    { id: 58, word: "ليمون", missing: "ن", shaped: ["لـ", "يـ", "مـ","و","ن"] },
+                    { id: 59, word: "لحم", missing: "م", shaped: ["لـ", "حـ", "م"] },
+                    { id: 60, word: "خروف", missing: "ف", shaped: ["خـ", "ر", "و","ف"] }
+                ]
+            },
+            'C': {
+                1: [ /* أضف هنا 10 كلمات للمستوى C بداية */
+                    { id: 61, word: "ثور", missing: "ث", shaped: ["ثـ", "و", "ر"] },
+                    { id: 62, word: "حمام", missing: "ح", shaped: ["حـ", "مـ", "ا","م"] },
+                    { id: 63, word: "حوض", missing: "ح", shaped: ["حـ", "و", "ض"] },
+                    { id: 64, word: "ذهب", missing: "ذ", shaped: ["ذ", "هـ", "ب"] },
+                    { id: 65, word: "شجرة", missing: "ش", shaped: ["شـ", "جـ", "ر","ة"] },
+                    { id: 66, word: "ضفدع", missing: "ض", shaped: ["ضـ", "فـ", "د","ع"] },
+                    { id: 67, word: "ظفر", missing: "ظ", shaped: ["ظـ", "فـ", "ر"] },
+                    { id: 68, word: "قلب", missing: "ق", shaped: ["قـ", "لـ", "ب"] },
+                    { id: 69, word: "غسالة", missing: "غ", shaped: ["غـ", "سـ", "ا","لـ","ـة"] },
+                    { id: 70, word: "فراولة", missing: "ف", shaped: ["فـ", "ر", "ا","و","لـ","ـة"] }
+                 ],
+                2: [ /* أضف هنا 10 كلمات للمستوى C وسط */
+                    { id: 71, word: "معزة", missing: "ز", shaped: ["مـ", "عـ", "ز","ة"] },
+                    { id: 72, word: "حوت", missing: "و", shaped: ["حـ", "و", "ت"] },
+                    { id: 73, word: "سمكة", missing: "ك", shaped: ["سـ", "مـ", "كـ","ـة"] },
+                    { id: 74, word: "صقر", missing: "ق", shaped: ["صـ", "قـ", "ر"] },
+                    { id: 75, word: "عظمة", missing: "ظ", shaped: ["عـ", "ظـ", "مـ","ـة"] },
+                    { id: 76, word: "فيشار", missing: "ش", shaped: ["فـ", "يـ", "شـ","ا","ر"] },
+                    { id: 77, word: "قهوة", missing: "ه", shaped: ["قـ", "ـهـ", "و","ة"] },
+                    { id: 78, word: "بقرة", missing: "ق", shaped: ["بـ", "قـ", "ر","ة"] },
+                    { id: 79, word: "بيت", missing: "ي", shaped: ["بـ", "يـ", "ت"] },
+                    { id: 80, word: "بندق", missing: "ن", shaped: ["بـ", "نـ", "د","ق"] }
+                 ],
+                3: [ /* أضف هنا 10 كلمات للمستوى C نهاية */ 
+                    { id: 81, word: "عيش", missing: "ش", shaped: ["عـ", "يـ", "ش"] },
+                    { id: 82, word: "صندوق", missing: "ق", shaped: ["صـ", "نـ", "د","و","ق"] },
+                    { id: 83, word: "ثلج", missing: "ج", shaped: ["ثـ", "لـ", "ج"] },
+                    { id: 84, word: "موز", missing: "ز", shaped: ["مـ", "و", "ز"] },
+                    { id: 85, word: "ثعبان", missing: "ن", shaped: ["ثـ", "عـ", "بـ","ا","ن"] },
+                    { id: 86, word: "شورت", missing: "ت", shaped: ["شـ", "و", "ر","ت"] },
+                    { id: 87, word: "بطيخ", missing: "خ", shaped: ["بـ", "طـ", "يـ","خ"] },
+                    { id: 88, word: "خاتم", missing: "م", shaped: ["خـ", "ا", "تـ","م"] },
+                    { id: 89, word: "مياه", missing: "ه", shaped: ["مـ", "يـ", "ا","ه"] },
+                    { id: 90, word: "ورق", missing: "ر", shaped: ["و", "ر", "ق"] }
+                ]
+            }
+        };
+
+
+        let currentSubLevel = 1;
+        let correctAnswers = 0;
+        let availableWords = [];
+        let isWaiting = false;
+        let timerInterval;
+        let counter = 0;
+
+        function setLevel(sub) {
+            currentSubLevel = sub;
+            document.querySelectorAll('.difficulty-options img').forEach(img => img.classList.remove('active'));
+            const activeImg = document.querySelectorAll('.difficulty-options img')[sub-1];
+            if (activeImg) activeImg.classList.add('active');
+
+            correctAnswers = 0;
+            resetStars();
+            resetTimer();
+
+            const words = allWordsMatrix[globalLevel][sub];
+            if(words && words.length > 0) {
+                availableWords = [...words].sort(() => Math.random() - 0.5);
+                startNewRound();
+            }
+        }
+
+        function startNewRound() {
+            if (isWaiting) return;
+            if (availableWords.length === 0) {
+                availableWords = [...allWordsMatrix[globalLevel][currentSubLevel]].sort(() => Math.random() - 0.5);
+            }
+            const current = availableWords.shift();
+            const imageBox = document.getElementById('imageBox');
+            imageBox.innerHTML = `<img src="images/word_photo${current.id}.png" onclick="new Audio('sounds/word_photo${current.id}.mp3').play()">`;
+            const dropZone = document.getElementById('wordDropZone');
+            dropZone.dataset.correctLetter = current.missing;
+            dropZone.dataset.word = current.word;
+            dropZone.classList.remove('glowing-box');
+            dropZone.innerHTML = current.shaped.map(ltr => ltr.includes(current.missing) ? `<span class="missing-letter">ـ</span>` : ltr).join("");
+            setupLetters(current.missing);
+        }
+
+        function setupLetters(correct) {
+            const grid = document.getElementById('lettersGrid');
+            grid.innerHTML = '';
+            const allLetters = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split("");
+            let options = new Set([correct]);
+            while (options.size < 10) options.add(allLetters[Math.floor(Math.random() * allLetters.length)]);
+            [...options].sort(() => Math.random() - 0.5).forEach(ltr => {
+                const div = document.createElement('div');
+                div.className = 'letter';
+                div.textContent = ltr;
+                div.draggable = true;
+                div.id = `draggable-${ltr}`;
+                div.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', ltr));
+                grid.appendChild(div);
+            });
+        }
+
+        const dropZone = document.getElementById('wordDropZone');
+        dropZone.addEventListener('dragover', e => e.preventDefault());
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            if (isWaiting) return;
+            const dropped = e.dataTransfer.getData('text/plain');
+            const correct = dropZone.dataset.correctLetter;
+            if (dropped === correct) {
+                document.getElementById('correctSound').play();
+                document.getElementById('applauseSound').play();
+                correctAnswers++;
+                updateStars();
+                dropZone.textContent = dropZone.dataset.word;
+                dropZone.classList.add('glowing-box');
+                isWaiting = true;
+                setTimeout(() => { isWaiting = false; startNewRound(); }, 2000);
+            } else {
+                document.getElementById('wrongSound').play();
+            }
+        });
+
+        function updateStars() {
+            if (correctAnswers === 3) setStar('star1');
+            if (correctAnswers === 6) setStar('star2');
+            if (correctAnswers === 9) setStar('star3');
+        }
+
+        function setStar(id) {
+            const star = document.getElementById(id);
+            star.src = "images/star_red.png";
+            star.style.transform = 'translateX(15px) scale(1.25)';
+            setTimeout(() => star.style.transform = '', 250);
+        }
+
+        function resetStars() { ['star1', 'star2', 'star3'].forEach(id => document.getElementById(id).src = "images/star1.png"); }
+        
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            counter = 0;
+            document.getElementById('timerDisplay').textContent = "0";
+        }
+
+        document.getElementById('startBtn').onclick = () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    counter++;
+                    document.getElementById('timerDisplay').textContent = counter;
+                }, 1000);
+            }
+        };
+        document.getElementById('stopBtn').onclick = () => { clearInterval(timerInterval); timerInterval = null; };
+        document.getElementById('retryBtn').onclick = () => setLevel(currentSubLevel);
+        document.getElementById('homeBtn').onclick = () => window.location.href = "activities.html";
+        document.getElementById('insBtn').onclick = () => new Audio('sounds/sd6_sound.mp3').play();
+
+        window.onload = () => {
+            const storedName = sessionStorage.getItem('userName');
+            const storedImage = sessionStorage.getItem('userImage');
+            if (storedName) document.getElementById('studentName').textContent = storedName;
+            if (storedImage) document.getElementById('childPhoto').src = storedImage;
+            setLevel(1);
+        };
+    </script>
+</body>
+</html>

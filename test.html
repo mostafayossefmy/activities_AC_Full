@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>النشاط الثاني - الحروف والصور</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1 id="title">اختر المستوى</h1>
+
+    <!-- اختيار المستوى -->
+    <div id="level-selection">
+        <button class="level-btn" onclick="startLevel('A')">المستوى A</button>
+        <button class="level-btn" onclick="startLevel('B')">المستوى B</button>
+        <button class="level-btn" onclick="startLevel('C')">المستوى C</button>
+    </div>
+
+    <!-- مكان عرض الحروف -->
+    <div id="letters-container" class="hidden"></div>
+
+    <!-- مكان الصورة -->
+    <div id="image-container" class="hidden">
+        <img id="main-image" src="" alt="">
+    </div>
+
+    <!-- رجوع لاختيار مستوى -->
+    <button id="back-btn" class="hidden" onclick="backToLevels()">رجوع</button>
+
+</div>
+
+<audio id="audio-player"></audio>
+
+<script src="levels.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
+
+body {
+    background: #f0f8ff;
+    font-family: "Cairo", sans-serif;
+    text-align: center;
+}
+
+.container {
+    margin-top: 30px;
+}
+
+.level-btn, #back-btn {
+    padding: 15px 25px;
+    margin: 10px;
+    font-size: 26px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background: #0097a7;
+    color: white;
+    transition: 0.3s;
+}
+
+.level-btn:hover, #back-btn:hover {
+    background: #007b80;
+}
+
+.letter-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+    margin: 12px;
+    background: #ffca28;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+#main-image {
+    width: 300px;
+    margin-top: 20px;
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="utf-8">
+    <title>التعرف على الحروف - النشاط الأول</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --display-box-width: 220px;
+            --display-box-height: 220px;
+            --display-bg-size: cover;
+            --letter-size: 55px;
+            --letter-bg-size: cover;
+            --main-font-family: 'NotoSansArabic_Condensed-Bold', Arial, sans-serif;
+        }
+
+        @font-face {
+            font-family: 'NotoSansArabic_Condensed-Bold';
+            src: url('fonts/NotoSansArabic_Condensed-Bold.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/back_a_img.png') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--main-font-family);
+            text-align: center;
+        }
+
+        .activity-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 80vh;
+            max-height: 800px;
+            background: #ffffff;
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row-reverse;
+            overflow: visible;
+        }
+
+        .sidebar {
+            width: 15%;
+            background: #f3e8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px 10px;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .sidebar .row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        .stars { direction: rtl; display: flex; align-items: flex-end; justify-content: center; gap: 5px; }
+        .stars img { width: 30px; height: 30px; transition: transform 0.3s ease, filter 0.3s ease; }
+        .stars img.active { filter: drop-shadow(0 0 6px red); transform: scale(1.1); }
+
+        .child-photo img { width: 110px; height: 110px; object-fit: cover; }
+        .student-name p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            background: #fff1cc;
+            border-radius: 12px;
+            padding: 6px 12px;
+            display: inline-block;
+        }
+
+        .timer img { width: 80px; height: 90px; object-fit: contain; }
+        .timer-controls { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 2px; }
+        .timer-controls img { width: 40px; height: 40px; cursor: pointer; transition: transform 0.2s ease; }
+        .timer-controls img:hover { transform: scale(1.1); }
+        .timer-display {
+            font-size: 20px;
+            font-weight: bold;
+            background: #f779e2;
+            border-radius: 8px;
+            padding: 5px 10px;
+            min-width: 50px;
+            height: 35px;
+            text-align: center;
+        }
+
+        .controls { display: flex; justify-content: center; gap: 25px; margin-top: 15px; }
+        .controls img { width: 55px; height: 55px; cursor: pointer; transition: transform 0.2s ease; }
+        .controls img:hover { transform: scale(1.1); }
+
+        .activity-content {
+            width: 85%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .activity-label { position: absolute; top: -25px; left: -25px; width: 150px; z-index: 5; }
+        .instructions-icon {
+            position: absolute;
+            top: 35px; left: 25px;
+            width: 70px; height: 70px;
+            cursor: pointer; z-index: 15;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .instructions-icon:hover { transform: scale(1.1); filter: drop-shadow(0 0 5px #f779e2); }
+        .instructions-icon:active { transform: translateX(12px); }
+
+        .display-area { display: flex; align-items: center; justify-content: center; width: 90%; max-width: 800px; gap: 10px; }
+        .side-wrapper { width: 150px; height: 150px; background: url('images/backaa_img.png') no-repeat center center; background-size: contain; display: flex; align-items: center; justify-content: center; }
+        .side-wrapper img { max-width: 80%; max-height: 80%; display: block; margin: 0 auto; }
+        .display-box { width: var(--display-box-width); height: var(--display-box-height); background: url('images/back_img.png') no-repeat center center; background-size: var(--display-bg-size); display: flex; align-items: center; justify-content: center; }
+        .display-box img { max-width: calc(var(--display-box-width) - 50px); max-height: calc(var(--display-box-height) - 50px); }
+        .letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 655px; margin: 0 auto; direction: rtl; }
+        .letter { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: calc(var(--letter-size) * 0.45); font-weight: bold; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.6); cursor: pointer; font-family: var(--main-font-family); background-repeat: no-repeat; background-position: center center; background-size: var(--letter-bg-size), var(--letter-bg-size); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+        .letter:active { transform: translateY(1px); }
+    </style>
+</head>
+<body>
+<div class="activity-container">
+    <div class="sidebar">
+        <div class="row stars">
+            <img src="images/star1.png" alt="نجمة 1" id="star1">
+            <img src="images/star2.png" alt="نجمة 2" id="star2">
+            <img src="images/star3.png" alt="نجمة 3" id="star3">
+        </div>
+        <div class="row child-photo"><img src="images/child_photo.png" alt="صورة الطفل" id="userPhoto"></div>
+        <div class="row student-name"><p id="userNameDisplay">أحمد محمد</p></div>
+        <div class="row timer"><img src="images/timer.png" alt="مؤقت النشاط"></div>
+        <div class="timer-controls">
+            <img src="images/stop.png" alt="إيقاف" id="stopBtn">
+            <div class="timer-display" id="timerDisplay">0</div>
+            <img src="images/play.png" alt="تشغيل" id="startBtn">
+        </div>
+        <div class="row controls">
+            <img src="images/retry.png" alt="إعادة التدريب" class="icon-retry">
+            <img src="images/home.png" alt="الصفحة الرئيسية" class="icon-home">
+        </div>
+    </div>
+
+    <div class="activity-content">
+        <img src="images/sd_img.png" alt="تعليمات النشاط" class="instructions-icon">
+        <img src="images/actv_1.png" alt="Activity Label" class="activity-label">
+
+        <div class="display-area">
+            <div class="side-wrapper"><img class="side-image" id="leftImage" src=""></div>
+            <div class="display-box" id="displayBox"></div>
+            <div class="side-wrapper"><img class="side-image" id="rightImage" src=""></div>
+        </div>
+        <div class="letters" id="lettersGrid"></div>
+    </div>
+</div>
+
+<script>
+    // بيانات الطفل
+    const storedName = sessionStorage.getItem('userName');
+    const storedPhoto = sessionStorage.getItem('userImage');
+    if(storedName) document.getElementById('userNameDisplay').textContent = storedName;
+    if(storedPhoto) document.getElementById('userPhoto').src = storedPhoto;
+
+    // مصفوفة الحروف لكل مستوى
+    const levels = {
+        'A': [
+            { letter:'أ', img:'1', sound:'1', leftImg:'1a', leftSound:'1a', rightImg:'1b', rightSound:'1b'},
+            { letter:'ب', img:'2', sound:'2', leftImg:'2a', leftSound:'2a', rightImg:'2b', rightSound:'2b'},
+            { letter:'د', img:'8', sound:'8', leftImg:'8a', leftSound:'8a', rightImg:'8b', rightSound:'8b'},
+            { letter:'س', img:'12', sound:'12', leftImg:'12a', leftSound:'12a', rightImg:'12b', rightSound:'12b'},
+            { letter:'ع', img:'18', sound:'18', leftImg:'18a', leftSound:'18a', rightImg:'18b', rightSound:'18b'},
+            { letter:'ل', img:'23', sound:'23', leftImg:'23a', leftSound:'23a', rightImg:'23b', rightSound:'23b'},
+            { letter:'م', img:'24', sound:'24', leftImg:'24a', leftSound:'24a', rightImg:'24b', rightSound:'24b'},
+            { letter:'و', img:'27', sound:'27', leftImg:'27a', leftSound:'27a', rightImg:'27b', rightSound:'27b'}
+        ],
+        'B': [
+            { letter:'ت', img:'3', sound:'3', leftImg:'3a', leftSound:'3a', rightImg:'3b', rightSound:'3b'},
+            { letter:'ج', img:'5', sound:'5', leftImg:'5a', leftSound:'5a', rightImg:'5b', rightSound:'5b'},
+            { letter:'ر', img:'10', sound:'10', leftImg:'10a', leftSound:'10a', rightImg:'10b', rightSound:'10b'},
+            { letter:'ز', img:'11', sound:'11', leftImg:'11a', leftSound:'11a', rightImg:'11b', rightSound:'11b'},
+            { letter:'ص', img:'14', sound:'14', leftImg:'14a', leftSound:'14a', rightImg:'14b', rightSound:'14b'},
+            { letter:'ط', img:'16', sound:'16', leftImg:'16a', leftSound:'16a', rightImg:'16b', rightSound:'16b'},
+            { letter:'ف', img:'20', sound:'20', leftImg:'20a', leftSound:'20a', rightImg:'20b', rightSound:'20b'},
+            { letter:'ك', img:'22', sound:'22', leftImg:'22a', leftSound:'22a', rightImg:'22b', rightSound:'22b'},
+            { letter:'ن', img:'25', sound:'25', leftImg:'25a', leftSound:'25a', rightImg:'25b', rightSound:'25b'},
+            { letter:'ه', img:'26', sound:'26', leftImg:'26a', leftSound:'26a', rightImg:'26b', rightSound:'26b'},
+            { letter:'ي', img:'28', sound:'28', leftImg:'28a', leftSound:'28a', rightImg:'28b', rightSound:'28b'}
+        ],
+        'C': [
+            { letter:'ث', img:'4', sound:'4', leftImg:'4a', leftSound:'4a', rightImg:'4b', rightSound:'4b'},
+            { letter:'ح', img:'6', sound:'6', leftImg:'6a', leftSound:'6a', rightImg:'6b', rightSound:'6b'},
+            { letter:'خ', img:'7', sound:'7', leftImg:'7a', leftSound:'7a', rightImg:'7b', rightSound:'7b'},
+            { letter:'ذ', img:'9', sound:'9', leftImg:'9a', leftSound:'9a', rightImg:'9b', rightSound:'9b'},
+            { letter:'ش', img:'13', sound:'13', leftImg:'13a', leftSound:'13a', rightImg:'13b', rightSound:'13b'},
+            { letter:'ض', img:'15', sound:'15', leftImg:'15a', leftSound:'15a', rightImg:'15b', rightSound:'15b'},
+            { letter:'ظ', img:'17', sound:'17', leftImg:'17a', leftSound:'17a', rightImg:'17b', rightSound:'17b'},
+            { letter:'غ', img:'19', sound:'19', leftImg:'19a', leftSound:'19a', rightImg:'19b', rightSound:'19b'},
+            { letter:'ق', img:'21', sound:'21', leftImg:'21a', leftSound:'21a', rightImg:'21b', rightSound:'21b'}
+        ]
+    };
+
+    // تحديد المستوى الحالي
+    const selectedLevel = sessionStorage.getItem('selectedLevel') || 'A';
+    const arabicLetters = levels[selectedLevel];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const grid = document.getElementById('lettersGrid');
+        grid.innerHTML = '';
+        arabicLetters.forEach(letterObj => {
+            const div = document.createElement('div');
+            div.className = 'letter';
+            div.textContent = letterObj.letter;
+            div.style.backgroundImage = `url('images/back_letter${letterObj.img}.png'), url('images/back_letter.png')`;
+
+            div.onclick = () => {
+                showLetter(letterObj);
+                handleCorrectAnswer();
+            };
+            grid.appendChild(div);
+        });
+    });
+
+    function showLetter(letterObj) {
+        const box = document.getElementById('displayBox');
+        const leftImage = document.getElementById('leftImage');
+        const rightImage = document.getElementById('rightImage');
+
+        box.innerHTML = `<img src="images/letter${letterObj.img}.png" alt="حرف ${letterObj.letter}" class="main-letter">`;
+        leftImage.src = `images/letter${letterObj.leftImg}.png`;
+        rightImage.src = `images/letter${letterObj.rightImg}.png`;
+        leftImage.style.display = 'block';
+        rightImage.style.display = 'block';
+
+        const mainImg = box.querySelector('.main-letter');
+        mainImg.onclick = () => new Audio(`sounds/letter${letterObj.sound}.mp3`).play();
+        leftImage.onclick = () => new Audio(`sounds/letter${letterObj.leftSound}.mp3`).play();
+        rightImage.onclick = () => new Audio(`sounds/letter${letterObj.rightSound}.mp3`).play();
+
+        new Audio(`sounds/letter${letterObj.sound}.mp3`).play();
+    }
+
+    // النجوم
+    let totalClicks = 0;
+    const stars = [document.getElementById('star1'), document.getElementById('star2'), document.getElementById('star3')];
+    function animateStar(starEl){ starEl.style.transform='translateX(15px) scale(1.25)'; setTimeout(()=>{starEl.style.transform='';},250);}
+    function handleCorrectAnswer(){ totalClicks++; if(totalClicks===3||totalClicks===6||totalClicks===9){ const starIndex=(totalClicks/3)-1; if(stars[starIndex]){stars[starIndex].src="images/star_red.png"; animateStar(stars[starIndex]);}}}
+
+    document.querySelector('.icon-home').addEventListener('click',()=>{window.location.href="activities.html";});
+    document.querySelector('.icon-retry').addEventListener('click',()=>{location.reload();});
+    document.querySelector('.instructions-icon').addEventListener('click',()=>{new Audio('sounds/sd1_sound.mp3').play();});
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // التايمر
+    let timerInterval; let counter=0;
+    const timerDisplay=document.getElementById('timerDisplay');
+    document.getElementById('startBtn').addEventListener('click', ()=>{
+        if(!timerInterval){timerInterval=setInterval(()=>{counter++;timerDisplay.textContent=counter;},1000);}});
+    document.getElementById('stopBtn').addEventListener('click', ()=>{clearInterval(timerInterval); timerInterval=null;});
+</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>البحث عن الحرف - النشاط الخامس (سحب وإفلات)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        @font-face {
+            font-family: 'NotoSansArabic_Condensed-Bold';
+            src: url('fonts/NotoSansArabic_Condensed-Bold.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/back_a_img.png') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+            overflow: hidden;
+        }
+
+        .activity-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 80vh;
+            max-height: 800px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+            background: #f3e8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px 10px;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .sidebar .row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .stars {
+            direction: rtl;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .stars img {
+            width: 30px;
+            height: 30px;
+            transition: transform .25s ease, filter .25s ease;
+        }
+
+        .stars img:nth-child(2) {
+            transform: translateY(-6px);
+        }
+
+        .child-photo img {
+            width: 110px;
+            height: 110px;
+            display: block;
+            margin: 0 auto;
+            border-radius: 0;
+            object-fit: cover;
+        }
+
+        .student-name {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .student-name p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            background: #fff1cc;
+            border-radius: 12px;
+            padding: 6px 12px;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timer img {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .timer-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px !important;
+            margin-top: 2px;
+        }
+
+        .timer-controls img {
+            width: 33px;
+            height: 33px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .timer-controls img:hover {
+            transform: scale(1.1);
+        }
+
+        .timer-display {
+            font-size: 20px;
+            font-weight: bold;
+            background: #f779e2;
+            border-radius: 8px;
+            padding: 5px 10px;
+            min-width: 50px;
+            height: 35px;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 25px !important;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 20px !important;
+        }
+
+        .controls .right {
+            order: 2;
+        }
+
+        .controls .left {
+            order: 1;
+        }
+
+        .controls img {
+            width: 55px;
+            height: 55px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .controls img:hover {
+            transform: scale(1.08);
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            height: 100%;
+            position: relative;
+        }
+
+        .activity-label {
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            width: 150px;
+            z-index: 5;
+        }
+
+        .instructions-icon {
+            position: absolute;
+            top: 35px;
+            left: 25px;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            z-index: 15;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .instructions-icon:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px #f779e2);
+        }
+
+        .instructions-icon:active {
+            transform: translateX(12px);
+        }
+
+        .target-letter {
+            width: 220px;
+            height: 220px;
+            background: url('images/back_img.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 90px;
+            font-weight: bold;
+            color: rgb(3, 17, 211);
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+        }
+
+        .letters-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            direction: rtl;
+            max-width: 635px;
+        }
+
+        .letter {
+            width: 50px;
+            height: 50px;
+            background: url('images/back_letter.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+            cursor: grab;
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+            transition: transform 0.2s ease;
+        }
+
+        .letter:active {
+            cursor: grabbing;
+        }
+
+        .letter:hover {
+            transform: scale(1.1);
+        }
+
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            display: none;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+        }
+
+        .difficulty-options {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .difficulty-options img {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .difficulty-options img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="activity-container">
+        <div class="sidebar">
+            <div class="row stars">
+                <img id="star1" src="images/star1.png" alt="نجمة 1">
+                <img id="star2" src="images/star2.png" alt="نجمة 2">
+                <img id="star3" src="images/star3.png" alt="نجمة 3">
+            </div>
+
+            <div class="row child-photo">
+                <img id="childPhoto" src="images/child_photo.png" alt="صورة الطفل">
+            </div>
+
+            <div class="row student-name">
+                <p id="studentName">أحمد محمد</p>
+            </div>
+
+            <div class="row timer">
+                <img src="images/timer.png" alt="مؤقت">
+            </div>
+
+            <div class="timer-controls">
+                <img src="images/stop.png" alt="إيقاف" id="stopBtn">
+                <div class="timer-display" id="timerDisplay">0</div>
+                <img src="images/play.png" alt="تشغيل" id="startBtn">
+            </div>
+
+            <div class="row controls">
+                <div class="right"><img id="homeBtn" src="images/home.png" alt="صفحة الأنشطة"></div>
+                <div class="left"><img id="retryBtn" src="images/retry.png" alt="إعادة"></div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <img src="images/sd_img.png" alt="تعليمات النشاط" class="instructions-icon">
+            <img src="images/actv_5.png" class="activity-label" alt="نشاط 5">
+            <div class="target-letter" id="targetLetter"></div>
+            <div class="letters-grid" id="lettersGrid"></div>
+
+            <div class="difficulty-options">
+                <img src="images/easy.png" alt="سهل" onclick="setDifficulty('easy')">
+                <img src="images/medium.png" alt="متوسط" onclick="setDifficulty('medium')">
+                <img src="images/hard.png" alt="صعب" onclick="setDifficulty('hard')">
+            </div>
+
+            <img class="result-icon" id="resultIcon" src="">
+            <audio id="correctSound" src="sounds/correct.mp3"></audio>
+            <audio id="wrongSound" src="sounds/wrong.mp3"></audio>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const storedName = sessionStorage.getItem('userName');
+            const storedImage = sessionStorage.getItem('userImage');
+
+            if (storedName) document.getElementById('studentName').textContent = storedName;
+            if (storedImage) document.getElementById('childPhoto').src = storedImage;
+        });
+
+        // ================= نظام المستويات ===================
+        const levelsLetters = {
+            A: ['أ','ب','د','س','ع','ل','م','و'],             
+            B: ['ت','ج','ر','ز','ص','ط','ف','ك','ن','ه','ي'],     
+            C: ['ث','ح','خ','ذ','ش','ض','ظ','غ','ق']            
+        };
+
+        const selectedLevel = sessionStorage.getItem('selectedLevel') || 'A';
+        let arabicLetters = [...levelsLetters[selectedLevel]];
+
+        let targetLetter = '';
+        let currentDifficulty = 'hard';
+        let correctWords = 0;
+
+        const startNewRound = () => {
+            const lettersGrid = document.getElementById('lettersGrid');
+            lettersGrid.innerHTML = '';
+            document.getElementById('resultIcon').style.display = 'none';
+
+            const targetIndex = Math.floor(Math.random() * arabicLetters.length);
+            targetLetter = arabicLetters[targetIndex];
+            document.getElementById('targetLetter').textContent = targetLetter;
+
+            let lettersToShow = [];
+            let otherLetters = arabicLetters.filter(l => l !== targetLetter);
+            otherLetters = shuffle(otherLetters);
+
+            let totalLettersNeeded = currentDifficulty === 'easy' ? 7 : currentDifficulty === 'medium' ? 12 : 18;
+
+            lettersToShow = [targetLetter, ...otherLetters.slice(0, totalLettersNeeded - 1)];
+
+            // إذا العدد المطلوب أكبر من حروف المستوى، نكمل من باقي المستويات
+            const allLetters = shuffle(Object.values(levelsLetters).flat());
+            let i = 0;
+            while (lettersToShow.length < totalLettersNeeded) {
+                if (!lettersToShow.includes(allLetters[i])) {
+                    lettersToShow.push(allLetters[i]);
+                }
+                i++;
+            }
+
+            lettersToShow = shuffle(lettersToShow);
+
+            lettersToShow.forEach(letter => {
+                const div = document.createElement('div');
+                div.className = 'letter';
+                div.textContent = letter;
+                div.setAttribute('draggable', true);
+
+                div.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text', letter);
+                });
+
+                lettersGrid.appendChild(div);
+            });
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const checkLetter = (selectedLetter) => {
+            const resultIcon = document.getElementById('resultIcon');
+            if (selectedLetter === targetLetter) {
+                document.getElementById('correctSound').play().catch(e => {});
+                resultIcon.src = 'images/right.png';
+                resultIcon.style.display = 'block';
+                correctWords++;
+                updateStars();
+                setTimeout(() => { resultIcon.style.display = 'none'; startNewRound(); }, 1000);
+            } else {
+                document.getElementById('wrongSound').play().catch(e => {});
+                resultIcon.src = 'images/wrong.png';
+                resultIcon.style.display = 'block';
+                setTimeout(() => { resultIcon.style.display = 'none'; }, 1000);
+            }
+        }
+
+        function animateStar(starEl) {
+            starEl.style.transform = 'translateX(15px) scale(1.25)';
+            setTimeout(() => { starEl.style.transform = ''; }, 250);
+        }
+
+        function updateStars() {
+            if (correctWords === 3) animateStar(document.getElementById('star1'));
+            else if (correctWords === 6) animateStar(document.getElementById('star2'));
+            else if (correctWords === 9) animateStar(document.getElementById('star3'));
+            if (correctWords >= 3) document.getElementById('star1').src = 'images/star_red.png';
+            if (correctWords >= 6) document.getElementById('star2').src = 'images/star_red.png';
+            if (correctWords >= 9) document.getElementById('star3').src = 'images/star_red.png';
+        }
+
+        function resetStars() {
+            correctWords = 0;
+            document.getElementById('star1').src = 'images/star1.png';
+            document.getElementById('star2').src = 'images/star2.png';
+            document.getElementById('star3').src = 'images/star3.png';
+        }
+
+        const setDifficulty = (level) => { currentDifficulty = level; startNewRound(); }
+
+        document.addEventListener('DOMContentLoaded', startNewRound);
+
+        document.getElementById('homeBtn').addEventListener('click', () => { window.location.href = "activities.html"; });
+        document.getElementById('retryBtn').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            counter = 0;
+            timerDisplay.textContent = counter;
+            resetStars();
+            startNewRound();
+        });
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        document.querySelector('.instructions-icon').addEventListener('click', () => {
+            const audio = new Audio('sounds/sd5_sound.mp3'); audio.play().catch(e => { });
+        });
+
+        const targetBox = document.getElementById('targetLetter');
+        targetBox.addEventListener('dragover', e => e.preventDefault());
+        targetBox.addEventListener('drop', e => {
+            e.preventDefault();
+            const draggedLetter = e.dataTransfer.getData('text');
+            checkLetter(draggedLetter);
+        });
+
+        // التايمر
+        let timerInterval;
+        let counter = 0;
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        startBtn.addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    counter++;
+                    timerDisplay.textContent = counter;
+                }, 1000);
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>تكوين الكلمات - النشاط الرابع</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        @font-face {
+            font-family: 'NotoSansArabic_Condensed-Bold';
+            src: url('fonts/NotoSansArabic_Condensed-Bold.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/back_a_img.png') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+            overflow: hidden;
+        }
+
+        .activity-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 80vh;
+            max-height: 800px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar {
+            width: 16%;
+            background: #f3e8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px 10px;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .sidebar .row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .stars {
+            direction: rtl;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .stars img {
+            width: 30px;
+            height: 30px;
+            transition: transform .25s ease, filter .25s ease;
+        }
+
+        .stars img:nth-child(2) {
+            transform: translateY(-6px);
+        }
+
+        .child-photo img {
+            width: 110px;
+            height: 110px;
+            display: block;
+            margin: 0 auto;
+            border-radius: 0;
+            object-fit: cover;
+        }
+
+        .student-name p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            background: #fff1cc;
+            border-radius: 12px;
+            padding: 6px 12px;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timer img {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .timer-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .timer-controls img {
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .timer-controls img:hover {
+            transform: scale(1.1);
+        }
+
+        .timer-display {
+            font-size: 20px;
+            font-weight: bold;
+            background: #f779e2;
+            border-radius: 8px;
+            padding: 5px 10px;
+            min-width: 50px;
+            height: 35px;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 25px !important;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+
+        .controls .right {
+            order: 2;
+        }
+
+        .controls .left {
+            order: 1;
+        }
+
+        .controls img {
+            width: 55px;
+            height: 55px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .controls img:hover {
+            transform: scale(1.08);
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            height: 100%;
+            position: relative;
+        }
+
+        .activity-label {
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            width: 150px;
+            z-index: 5;
+        }
+
+        .instructions-icon {
+            position: absolute;
+            top: 35px;
+            left: 25px;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            z-index: 15;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .instructions-icon:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px #f779e2);
+        }
+
+        .instructions-icon:active {
+            transform: translateX(12px);
+        }
+
+        .image-box {
+            width: 220px;
+            height: 220px;
+            background-image: url("images/back_img.png");
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-box img {
+            max-width: 180px;
+            max-height: 180px;
+        }
+
+        .word-drop-zone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70px;
+            width: 90%;
+            max-width: 400px;
+            background: #ffffcc;
+            border: 10px solid #ff9966;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 36px;
+            font-weight: bold;
+            color: #2a06f5;
+            direction: rtl;
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+            transition: box-shadow 0.5s ease-in-out;
+        }
+
+        .letters-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            direction: rtl;
+        }
+
+        .letter {
+            width: 55px;
+            height: 55px;
+            background-image: url("images/back_letter.png");
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            font-family: 'NotoSansArabic_Condensed-Bold', sans-serif;
+        }
+
+        .letter:hover {
+            transform: scale(1.1);
+        }
+
+        .glowing-box {
+            animation: correctGlow 1.5s ease-in-out 2;
+        }
+
+        @keyframes correctGlow {
+            0% {
+                box-shadow: 0 0 0 #4CAF50;
+            }
+
+            50% {
+                box-shadow: 0 0 25px 8px #4CAF50;
+            }
+
+            100% {
+                box-shadow: 0 0 0 #4CAF50;
+            }
+        }
+
+        .star {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-image: url('images/star.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
+            animation: star-fly 4s forwards;
+            z-index: 10;
+        }
+
+        @keyframes star-fly {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(0.1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="activity-container">
+        <div class="sidebar">
+            <div class="row stars">
+                <img id="star1" src="images/star1.png" alt="نجمة 1">
+                <img id="star2" src="images/star2.png" alt="نجمة 2">
+                <img id="star3" src="images/star3.png" alt="نجمة 3">
+            </div>
+
+            <div class="row child-photo">
+                <img id="childPhoto" src="images/child_photo.png" alt="صورة الطفل">
+            </div>
+
+            <div class="row student-name">
+                <p id="studentName">أحمد محمد</p>
+            </div>
+
+            <div class="row timer">
+                <img src="images/timer.png" alt="مؤقت">
+            </div>
+
+            <div class="timer-controls">
+                <img src="images/stop.png" alt="إيقاف" id="stopBtn">
+                <div class="timer-display" id="timerDisplay">0</div>
+                <img src="images/play.png" alt="تشغيل" id="startBtn">
+            </div>
+
+            <div class="row controls">
+                <div class="right"><img id="homeBtn" src="images/home.png" alt="الرئيسية"></div>
+                <div class="left"><img id="retryBtn" src="images/retry.png" alt="إعادة"></div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <img src="images/sd_img.png" alt="تعليمات النشاط" class="instructions-icon">
+            <img src="images/actv_4.png" class="activity-label" alt="نشاط 4">
+            <div class="image-box">
+                <img id="wordImage" src="" alt="صورة الكلمة">
+            </div>
+            <div class="word-drop-zone" id="wordDropZone"></div>
+            <div class="letters-grid" id="lettersGrid"></div>
+
+            <audio id="correctSound" src="sounds/correct.mp3"></audio>
+            <audio id="wrongSound" src="sounds/wrong.mp3"></audio>
+            <audio id="applauseSound" src="sounds/clap.mp3"></audio>
+        </div>
+    </div>
+
+    <script>
+        // ✅ عرض اسم وصورة المستخدم
+        document.addEventListener('DOMContentLoaded', function () {
+            const storedName = sessionStorage.getItem('userName');
+            const storedImage = sessionStorage.getItem('userImage');
+            if (storedName) document.getElementById('studentName').textContent = storedName;
+            if (storedImage) document.getElementById('childPhoto').src = storedImage;
+        });
+
+        // ===== كلمات كل مستوى =====
+        const levelsWords = {
+            1: [
+                 { id: 1, word: "أسد", letters: ["أ", "س", "د"] },
+                    { id: 2, word: "بطة",letters: ["ب", "ط", "ة"] },
+                    { id: 3, word: "ديك", letters: ["د", "ي", "ك"] },
+                    { id: 4, word: "سمك", letters: ["س", "م", "ك"] },
+                    { id: 5, word: "عسل", letters: ["ع", "س", "ل"] },
+                    { id: 6, word: "لحم", letters: ["ل", "ح", "م"] },
+                    { id: 7, word: "مركب", letters: ["م", "ر", "ك","ب"] },
+                    { id: 8, word: "ولد", letters: ["و", "ل", "د"] },
+                    { id: 9, word: "دب", letters: ["د", "ب"] },
+                    { id: 10, word: "أرنب", letters: ["أ", "ر", "ن","ب"] }
+            ],
+            2: [
+                { id: 11, word: "شاي", letters: ["شـ", "ا", "ي"] },
+                    { id: 12, word: "دب", letters: ["د", "ب"] },
+                    { id: 13, word: "صندوق", letters: ["ص", "ن", "د","و","ق"] },
+                    { id: 14, word: "غسالة", letters: ["غ", "س", "ا", "ل", "ة"] },
+                    { id: 15, word: "ثعبان", letters: ["ث", "ع", "ب", "ا", "ن"] },
+                    { id: 16, word: "ثعلب", letters: ["ث", "ع", "ل","ب"] },
+                    { id: 17, word: "شمعة", letters: ["ش", "م", "ع","ة"] },
+                    { id: 18, word: "توت", letters: ["ت", "و", "ت"] },
+                    { id: 19, word: "كلب", letters: ["ك", "ل", "ب"] },
+                    { id: 20, word: "خروف", letters: ["خ", "ر", "و","ف"] }
+            ],
+            3: [
+                { id: 21, word: "مركب", letters: ["م", "ر", "ك","ب"] },
+                    { id: 22, word: "ضفدع", letters: ["ض", "ف", "د","ع"] },
+                    { id: 23, word: "خس", letters: ["خ", "س"] },
+                    { id: 24, word: "يد", letters: ["ي", "د"] },
+                    { id: 25, word: "لحم", letters: ["ل", "ح", "م"] },
+                    { id: 26, word: "فول", letters: ["ف", "و", "ل"] },
+                    { id: 27, word: "كلب", letters: ["ك", "ل", "ب"] },
+                    { id: 28, word: "فيل", letters: ["ف", "ي", "ل"] },
+                    { id: 29, word: "قرد", letters: ["ق", "ر", "د"] },
+                    { id: 30, word: "بنت", letters: ["ب", "ن", "ت"] }
+            ]
+        };
+
+        // ===== تحديد المستوى المختار =====
+        const levelMap = { 'A': 1, 'B': 2, 'C': 3 };
+        const selectedLevel = sessionStorage.getItem('selectedLevel') || 'A';
+        const currentLevel = levelMap[selectedLevel];
+        let wordQueue = shuffle([...levelsWords[currentLevel]]); // نسخ الكلمات بالمستوى وتغيير الترتيب
+        let currentWord = {}, placedLetters = [], correctAnswers = 0;
+
+        // ===== عناصر النجوم =====
+        const starElems = [
+            document.getElementById('star1'),
+            document.getElementById('star2'),
+            document.getElementById('star3')
+        ];
+        const initialStarSrc = ['images/star1.png', 'images/star2.png', 'images/star3.png'];
+        const highlightStarSrc = 'images/star_red.png';
+
+        // ===== إعداد النشاط =====
+        document.addEventListener('DOMContentLoaded', startNewRound);
+
+        function startNewRound() {
+            if (wordQueue.length === 0) {
+                wordQueue = shuffle([...levelsWords[currentLevel]]); // إعادة ترتيب عند الانتهاء من كل الكلمات
+            }
+            currentWord = wordQueue.pop();
+            document.getElementById('wordImage').src = `images/word_photo${currentWord.id}.png`;
+
+            placedLetters = [];
+            const lettersGrid = document.getElementById('lettersGrid');
+            lettersGrid.innerHTML = '';
+            const wordDropZone = document.getElementById('wordDropZone');
+            wordDropZone.textContent = '';
+            wordDropZone.style.boxShadow = '';
+            wordDropZone.classList.remove('glowing-box');
+
+            const shuffledLetters = shuffle([...currentWord.letters]);
+            const letterCount = {};
+            shuffledLetters.forEach(letter => {
+                if (!letterCount[letter]) letterCount[letter] = 1;
+                else letterCount[letter]++;
+
+                const letterDiv = document.createElement('div');
+                letterDiv.textContent = letter;
+                letterDiv.classList.add('letter');
+                letterDiv.draggable = true;
+                letterDiv.dataset.key = `${letter}-${letterCount[letter]}`;
+                letterDiv.addEventListener('dragstart', dragStart);
+                lettersGrid.appendChild(letterDiv);
+            });
+
+            setupDropZone();
+        }
+
+        document.getElementById('wordImage').addEventListener('click', function () {
+            if (currentWord && currentWord.id) {
+                const audio = new Audio(`sounds/word_photo${currentWord.id}.mp3`);
+                audio.play().catch(e => { });
+            }
+        });
+
+        function dragStart(event) {
+            event.dataTransfer.setData('text/plain', JSON.stringify({
+                letter: event.target.textContent,
+                key: event.target.dataset.key
+            }));
+        }
+
+        function setupDropZone() {
+            const dropZone = document.getElementById('wordDropZone');
+            dropZone.addEventListener('dragover', dragOver);
+            dropZone.addEventListener('drop', drop);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const draggedData = JSON.parse(event.dataTransfer.getData('text/plain'));
+            const droppedLetter = draggedData.letter;
+            const droppedKey = draggedData.key;
+            const nextCorrectLetter = currentWord.letters[placedLetters.length];
+
+            if (droppedLetter === nextCorrectLetter) {
+                placedLetters.push(droppedLetter);
+                document.getElementById('correctSound').play();
+                document.getElementById('wordDropZone').textContent = placedLetters.join('');
+                document.querySelectorAll('.letter').forEach(el => {
+                    if (el.dataset.key === droppedKey) el.remove();
+                });
+                document.getElementById('wordDropZone').style.boxShadow = '0 0 15px 5px #ffeb3b';
+                setTimeout(() => { document.getElementById('wordDropZone').style.boxShadow = ''; }, 500);
+                checkCompletion();
+            } else {
+                document.getElementById('wrongSound').play();
+            }
+        }
+
+        function checkCompletion() {
+            if (placedLetters.length === currentWord.letters.length) {
+                document.getElementById('applauseSound').play();
+                const dropZone = document.getElementById('wordDropZone');
+                dropZone.classList.add('glowing-box');
+                createFlyingStars();
+
+                correctAnswers++;
+                updateStars();
+                setTimeout(startNewRound, 4000);
+            }
+        }
+
+        function animateStar(starEl) {
+            starEl.style.transform = 'translateX(15px) scale(1.25)';
+            setTimeout(() => { starEl.style.transform = ''; }, 250);
+        }
+
+        function updateStars() {
+            if (correctAnswers === 3) animateStar(starElems[0]), starElems[0].src = highlightStarSrc;
+            else if (correctAnswers === 6) animateStar(starElems[1]), starElems[1].src = highlightStarSrc;
+            else if (correctAnswers === 9) animateStar(starElems[2]), starElems[2].src = highlightStarSrc;
+        }
+
+        function createFlyingStars() {
+            const imageBox = document.querySelector('.image-box');
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 20 + 10;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                const startX = imageBox.offsetLeft + imageBox.offsetWidth / 2 - size / 2;
+                const startY = imageBox.offsetTop;
+                star.style.left = `${startX}px`;
+                star.style.top = `${startY}px`;
+                const endX = startX + (Math.random() - 0.5) * 400;
+                const endY = startY - 500;
+                star.style.setProperty('--end-x', `${endX - startX}px`);
+                star.style.setProperty('--end-y', `${endY - startY}px`);
+                document.body.appendChild(star);
+                setTimeout(() => { star.remove(); }, 4000);
+            }
+        }
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.querySelector('.instructions-icon').addEventListener('click', () => {
+            const audio = new Audio('sounds/sd4_sound.mp3');
+            audio.play().catch(e => { });
+        });
+
+        // ===== زر الهوم وإعادة التشغيل =====
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = "activities.html";
+        });
+
+        
+const retryBtn = document.getElementById('retryBtn');
+
+retryBtn.addEventListener('click', () => {
+
+    // إعادة عداد الإجابات الصحيحة وإظهار النجوم الأصلية
+    correctAnswers = 0;
+    starElems[0].src = initialStarSrc[0];
+    starElems[1].src = initialStarSrc[1];
+    starElems[2].src = initialStarSrc[2];
+
+    // إيقاف التايمر وإعادته للصفر
+    clearInterval(timerInterval);
+    timerInterval = null;
+    counter = 0;
+    timerDisplay.textContent = 0;
+
+    // بدء جولة جديدة بنفس إعدادات المستوى
+    startNewRound();
+});
+
+        // ===== التايمر =====
+        let timerInterval, counter = 0;
+        const timerDisplay = document.getElementById('timerDisplay');
+        document.getElementById('startBtn').addEventListener('click', () => {
+            if (!timerInterval) timerInterval = setInterval(() => {
+                counter++;
+                timerDisplay.textContent = counter;
+            }, 1000);
+        });
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        
+
+        // ===== دالة shuffle =====
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+
+</html>

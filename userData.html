@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>بيانات المستخدم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/backactivities_img.png') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 4vh 4vw;
+            border-radius: 20px;
+            box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            margin-bottom: 2vh;
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1vh 1vw;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            margin-bottom: 2vh;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 1vh 3vw;
+            background-color: #ff6b6b;
+            color: white;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 2vh;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #ee5a24;
+            transform: scale(1.05);
+        }
+
+        .image-preview {
+            width: clamp(120px, 20vw, 150px);
+            height: clamp(120px, 20vw, 150px);
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            margin: 0 auto 3vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #999;
+            border: 4px solid #ddd;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1vh 3vw;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 1vh 1vw;
+        }
+
+        .continue-btn {
+            background-color: #1dd1a1;
+            color: white;
+        }
+
+        .continue-btn:hover {
+            background-color: #10ac84;
+            transform: scale(1.05);
+        }
+
+        .new-user-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .new-user-btn:hover {
+            background-color: #e67e22;
+            transform: scale(1.05);
+        }
+
+        .alert {
+            color: red;
+            margin-bottom: 1.5vh;
+            display: none;
+        }
+
+        .welcome-text {
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            color: #2c3e50;
+            margin: 2vh 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 5vw;
+            }
+            .btn {
+                padding: 1.5vh 4vw;
+                font-size: clamp(0.9rem, 4vw, 1rem);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="mainContainer">
+        <h1 id="pageTitle">أدخل بياناتك</h1>
+
+        <div class="alert" id="alertMsg">يرجى إدخال الاسم وتحميل صورة شخصية</div>
+
+        <!-- نموذج الإدخال (يظهر فقط لو مفيش بيانات محفوظة أو عند اختيار مستخدم جديد) -->
+        <div id="inputForm">
+            <input type="text" id="userName" placeholder="اكتب اسمك هنا">
+
+            <label class="upload-btn" for="userImage">اختر صورة شخصية</label>
+            <input type="file" id="userImage" accept="image/*">
+
+            <div class="image-preview" id="imagePreview">لا توجد صورة</div>
+
+            <div class="continue-btn btn" id="saveBtn">حفظ ومتابعة</div>
+        </div>
+
+        <!-- شاشة الترحيب (تظهر لو في بيانات محفوظة) -->
+        <div id="welcomeScreen" style="display: none;">
+            <p class="welcome-text">مرحباً بعودتك!</p>
+            <div class="image-preview" id="savedImagePreview"></div>
+            <p style="font-size: 1.5rem; margin: 1vh 0;" id="savedName"></p>
+
+            <div class="continue-btn btn" id="continueSavedBtn">متابعة</div>
+            <div class="new-user-btn btn" id="newUserBtn">مستخدم جديد</div>
+        </div>
+    </div>
+
+    <script>
+        const inputForm = document.getElementById('inputForm');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const pageTitle = document.getElementById('pageTitle');
+        const savedName = document.getElementById('savedName');
+        const savedImagePreview = document.getElementById('savedImagePreview');
+
+        const userNameInput = document.getElementById('userName');
+        const userImageInput = document.getElementById('userImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const alertMsg = document.getElementById('alertMsg');
+        const saveBtn = document.getElementById('saveBtn');
+
+        // تحميل الصورة في المعاينة
+        userImageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="صورة المستخدم">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.innerHTML = 'لا توجد صورة';
+            }
+        });
+
+        // حفظ البيانات والمتابعة
+        saveBtn.addEventListener('click', function () {
+            const userName = userNameInput.value.trim();
+            const imageFile = userImageInput.files[0];
+
+            if (!userName || !imageFile) {
+                alertMsg.style.display = 'block';
+                return;
+            }
+
+            alertMsg.style.display = 'none';
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageData = e.target.result;
+
+                // حفظ دائم في localStorage
+                localStorage.setItem('userName', userName);
+                localStorage.setItem('userImage', imageData);
+
+                // نسخ إلى sessionStorage عشان الأنشطة تقرأها
+                sessionStorage.setItem('userName', userName);
+                sessionStorage.setItem('userImage', imageData);
+
+                window.location.href = 'levels.html';
+            }
+            reader.readAsDataURL(imageFile);
+        });
+
+        // زر المتابعة للمستخدم المحفوظ
+        document.getElementById('continueSavedBtn').addEventListener('click', function () {
+            const name = localStorage.getItem('userName');
+            const image = localStorage.getItem('userImage');
+
+            sessionStorage.setItem('userName', name);
+            sessionStorage.setItem('userImage', image);
+
+            window.location.href = 'levels.html';
+        });
+
+        // زر مستخدم جديد
+        document.getElementById('newUserBtn').addEventListener('click', function () {
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userImage');
+
+            // إعادة تحميل الصفحة لتظهر نموذج الإدخال
+            location.reload();
+        });
+
+        // عند تحميل الصفحة: تحقق من وجود بيانات محفوظة
+        window.addEventListener('load', function () {
+            const savedUserName = localStorage.getItem('userName');
+            const savedUserImage = localStorage.getItem('userImage');
+
+            if (savedUserName && savedUserImage) {
+                // إظهار شاشة الترحيب
+                pageTitle.textContent = "أهلاً مرة أخرى!";
+                inputForm.style.display = 'none';
+                welcomeScreen.style.display = 'block';
+
+                savedName.textContent = savedUserName;
+                savedImagePreview.innerHTML = `<img src="${savedUserImage}" alt="صورة المستخدم">`;
+            } else {
+                // إظهار نموذج الإدخال
+                inputForm.style.display = 'block';
+                welcomeScreen.style.display = 'none';
+                pageTitle.textContent = "أدخل بياناتك";
+            }
+        });
+
+        // منع كليك يمين
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+
+</html>

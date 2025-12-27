@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>إلى اللقاء</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/backactivities_img.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            /* ✅ يخلي العناصر تحت بعض */
+            /*  justify-content: center;*/
+            justify-content: flex-start;    /* يرفعهم لأعلى */
+            padding-top: 80px;      /* مسافة مريحة من الأعلى */
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+        }
+
+
+        .exit-logo {
+            display: block;
+            margin: 40px auto 20px auto;       /* فوق الرسالة وفي المنتصف */
+            width: 250px;         /* حجم أكبر - يمكن تغييره */
+            height: auto;
+        }
+
+
+        .message {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/logo.png" class="exit-logo" alt="الشعار">
+    <div class="message">شكرًا لاستخدامك التطبيق - إلى اللقاء!</div>
+</body>
+
+</html>
